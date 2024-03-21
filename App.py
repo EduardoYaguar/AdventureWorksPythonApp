@@ -23,7 +23,7 @@ class MyPlotFrame(customtkinter.CTkScrollableFrame):
 
         canvas.get_tk_widget().grid(row=1, column=0, padx=10, pady=(10,0), sticky="ew")
 
-        textBox = customtkinter.CTkTextbox(self, fg_color="gray30", corner_radius=6)
+        textBox = customtkinter.CTkTextbox(self, fg_color="gray30", corner_radius=6, cursor="arrow")
         textBox.insert(index="0.0",text=self.desc)
         textBox.configure(state="disable")
         textBox.grid(row=3, column=0, padx=10, pady=(10,0), sticky="nsew",)
