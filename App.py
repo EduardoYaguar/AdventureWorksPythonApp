@@ -52,6 +52,8 @@ class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
+        x = []
+        y = []
         self.title("Adventure Works Data Visualization App")
         self.geometry("1080x990")
         self.grid_rowconfigure((0,1),weight=1)
@@ -59,8 +61,16 @@ class App(customtkinter.CTk):
 
         db = DataBase("mssql+pyodbc://LAPTOP-MGLHUKHT/DWAdventureWorks?driver=ODBC+Driver+17+for+SQL+Server&trusted_connection=yes")
         db.connect()
-        results = db.executeQuery(text('SELECT * FROM DIMTiendas'))
-        print(results)
+        result1 = db.executeQuery(text('SELECT ter.Nombreterritorio FROM DimTerritorio as ter ORDER BY ter.Nombreterritorio'))
+        for rows in result1:
+            x.extend(rows)
+        result2 = db.executeQuery(text('SELECT CAST(SUM(ord.TotalOrden) AS INTEGER) as Total_Ventas FROM DimTerritorio as ter INNER JOIN Hechos_Ordenes AS ord ON ter.IDTerritorio = ord.IDTerritorio GROUP BY ter.Nombreterritorio'))
+        for rows in result2:
+            decimal = int(rows[0])
+            y.append(decimal)
+
+        plt.bar(x,y)
+        plt.show()
 
 
 
