@@ -39,13 +39,11 @@ class MyPlotFrame(customtkinter.CTkScrollableFrame):
         
 
         self.ax.set_xticks(range(len(xData)))
-        self.ax.set_xticklabels(xData, rotation=15, ha='center', fontsize="small")
+        self.ax.set_xticklabels(xData, rotation=15, ha='right', fontsize="small")
         self.ax.grid()
         self.ax.yaxis.grid(color='gray', linestyle='--', linewidth=0.5, alpha=0.8)  
         self.ax.xaxis.grid(color="none")
 
-        print(  xData, "\n")
-        print(  yData, "\n")
         canvas = FigureCanvasTkAgg(self.figure, self)
         canvas.draw()   
         #Puedo hacer la creación del objeto con el matplot en blanco y a traves de metodos hago los cambios de valores
@@ -90,7 +88,7 @@ class App(customtkinter.CTk):
         for rows in result1:
             x.extend(rows)
         y = []
-        result2 = db.executeQuery(text('SELECT TOP 10 SUM(ord.TotalOrden) as totalVentas FROM DimProductos as pro INNER JOIN DimDetalles_Orden as deo ON pro.IDProducto = deo.IDProducto INNER JOIN Hechos_Ordenes as ord ON deo.IDOrden = ord.IDOrden GROUP BY pro.NombreProducto ORDER BY totalVentas DESC;'))
+        result2 = db.executeQuery(text('SELECT TOP 10 CAST(SUM(ord.TotalOrden) AS INTEGER) as totalVentas FROM DimProductos as pro INNER JOIN DimDetalles_Orden as deo ON pro.IDProducto = deo.IDProducto INNER JOIN Hechos_Ordenes as ord ON deo.IDOrden = ord.IDOrden GROUP BY pro.NombreProducto ORDER BY totalVentas DESC;'))
         for rows in result2:
             value = int(rows[0])
             y.append(value)
@@ -104,7 +102,7 @@ class App(customtkinter.CTk):
             x.extend(rows)
         
         y = []
-        result2 = db.executeQuery(text('SELECT SUM(ord.TotalOrden) as Total_Ventas FROM DimTiempo as tie INNER JOIN Hechos_Ordenes as ord ON tie.IDOrden = ord.IDOrden GROUP BY tie.TRIMESTRE ORDER BY Total_Ventas DESC;'))
+        result2 = db.executeQuery(text('SELECT CAST(SUM(ord.TotalOrden) AS INTEGER) as Total_Ventas FROM DimTiempo as tie INNER JOIN Hechos_Ordenes as ord ON tie.IDOrden = ord.IDOrden GROUP BY tie.TRIMESTRE ORDER BY Total_Ventas DESC;'))
         for rows in result2:
             value = int(rows[0])
             y.append(value)
@@ -117,7 +115,7 @@ class App(customtkinter.CTk):
         for rows in result1:
             x.extend(rows)
         y = []
-        result2 = db.executeQuery(text('SELECT TOP 10 SUM(ord.TotalOrden) as total_Ventas FROM DimClientes AS cli INNER JOIN Hechos_Ordenes as ord ON cli.IDCliente = ord.IDCliente GROUP BY cli.Primer_Nombre, cli.Apellido ORDER BY SUM(ord.TotalOrden) DESC;'))
+        result2 = db.executeQuery(text('SELECT TOP 10 CAST(SUM(ord.TotalOrden) AS INTEGER) as total_Ventas FROM DimClientes AS cli INNER JOIN Hechos_Ordenes as ord ON cli.IDCliente = ord.IDCliente GROUP BY cli.Primer_Nombre, cli.Apellido ORDER BY SUM(ord.TotalOrden) DESC;'))
         for rows in result2:
             value = int(rows[0])
             y.append(value)
