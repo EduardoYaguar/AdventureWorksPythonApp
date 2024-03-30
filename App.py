@@ -24,7 +24,7 @@ class DataBase:
         return result.fetchall()
 
 class MyPlotFrame(customtkinter.CTkScrollableFrame):
-    def __init__(self,master,title, desc):
+    def __init__(self,master,title, xData, yData, desc ):
         super().__init__(master)
         self.grid_columnconfigure(0,weight=1)
         self.grid_rowconfigure((0,1,2), weight=1)
@@ -32,7 +32,13 @@ class MyPlotFrame(customtkinter.CTkScrollableFrame):
         self.desc = desc
         self.figure, self.ax = plt.subplots()
         
-        
+        xData = [item[0] for item in xData]
+        yData = [item[0] for item in yData]
+
+        self.ax.bar(xData, yData)
+
+        self.ax.set_xticks(range(len(xData)))
+        self.ax.set_xticklabels(xData, rotation=20, ha='right')
 
         canvas = FigureCanvasTkAgg(self.figure, self)
         canvas.draw()   
@@ -66,27 +72,22 @@ class App(customtkinter.CTk):
             x.extend(rows)
         result2 = db.executeQuery(text('SELECT CAST(SUM(ord.TotalOrden) AS INTEGER) as Total_Ventas FROM DimTerritorio as ter INNER JOIN Hechos_Ordenes AS ord ON ter.IDTerritorio = ord.IDTerritorio GROUP BY ter.Nombreterritorio'))
         for rows in result2:
-            decimal = int(rows[0])
-            y.append(decimal)
+            value = int(rows[0])
+            y.append(value)
+        
 
-        plt.bar(x,y)
-        plt.show()
-
-
-
-        self.MyPlotFrame1 = MyPlotFrame(self, title="Ventas por territorio 2014", desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque varius, dui sit amet iaculis convallis, nulla lectus varius turpis, vitae fringilla dui mi iaculis mi. Donec et mattis urna, vel vestibulum diam. Suspendisse nec pellentesque felis. Nunc in volutpat libero, nec condimentum velit. Nullam quis quam eget felis convallis porta. Mauris porttitor, nunc ut aliquet posuere, leo lectus aliquam est, eu luctus magna dolor non nibh. Aliquam erat volutpat. Integer ultricies suscipit lacus. Sed eu massa non enim lobortis elementum. Cras tempus finibus nunc, sit amet pretium nisl mattis quis. Cras id tristique leo. Phasellus massa purus, rhoncus et diam.")
+        self.MyPlotFrame1 = MyPlotFrame(self, title="Ventas por territorio 2014", xData=result1, yData=result2 ,desc="Lorem ipsvolutpat. Integer s tempus finibu massa purus, rhoncus et diam.")
         self.MyPlotFrame1.grid(row=0,column=0,padx=10,pady=(10,0), sticky="nsew")
 
 
-        self.MyPlotFrame2 = MyPlotFrame(self, title="Categorias más vendidas en el territorio X", desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque varius, dui sit amet iaculis convallis, nulla lectus varius turpis, vitae fringilla dui mi iaculis mi. Donec et mattis urna, vel vestibulum diam. Suspendisse nec pellentesque felis. Nunc in volutpat libero, nec condimentum velit. Nullam quis quam eget felis convallis porta. Mauris porttitor, nunc ut aliquet posuere, leo lectus aliquam est, eu luctus magna dolor non nibh. Aliquam erat volutpat. Integer ultricies suscipit lacus. Sed eu massa non enim lobortis elementum. Cras tempus finibus nunc, sit amet pretium nisl mattis quis. Cras id tristique leo. Phasellus massa purus, rhoncus et diam.") #Siendo x el territorio con mayor ganacias en 2014
+        self.MyPlotFrame2 = MyPlotFrame(self, title="Categorias más vendidas en el territorio X", xData=result1, yData=result2 ,desc="Lorem t amet iaculis con")
         self.MyPlotFrame2.grid(row=0,column=1,padx=10,pady=(10,0), sticky="nsew")
-
         
-        self.MyPlotFrame3 = MyPlotFrame(self, title="Categorias más vendidas en el territorio Y", desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque varius, dui sit amet iaculis convallis, nulla lectus varius turpis, vitae fringilla dui mi iaculis mi. Donec et mattis urna, vel vestibulum diam. Suspendisse nec pellentesque felis. Nunc in volutpat libero, nec condimentum velit. Nullam quis quam eget felis convallis porta. Mauris porttitor, nunc ut aliquet posuere, leo lectus aliquam est, eu luctus magna dolor non nibh. Aliquam erat volutpat. Integer ultricies suscipit lacus. Sed eu massa non enim lobortis elementum. Cras tempus finibus nunc, sit amet pretium nisl mattis quis. Cras id tristique leo. Phasellus massa purus, rhoncus et diam.") #Siendo y el territorio con menos ventas en 2014
+        self.MyPlotFrame3 = MyPlotFrame(self, title="Categorias más vendidas en el territorio Y", xData=result1, yData=result2 , desc="Lorem iit. Pnullibero elemeetisellus massa purus, rhoncus et diam.") #Siendo y el territorio con menos ventas en 2014
         self.MyPlotFrame3.grid(row=1,column=0,padx=10,pady=(10,0), sticky="nsew")
 
         
-        self.MyPlotFrame4 = MyPlotFrame(self, title="Categorias con menos ventas en 2014", desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque varius, dui sit amet iaculis convallis, nulla lectus varius turpis, vitae fringilla dui mi iaculis mi. Donec et mattis urna, vel vestibulum diam. Suspendisse nec pellentesque felis. Nunc in volutpat libero, nec condimentum velit. Nullam quis quam eget felis convallis porta. Mauris porttitor, nunc ut aliquet posuere, leo lectus aliquam est, eu luctus magna dolor non nibh. Aliquam erat volutpat. Integer ultricies suscipit lacus. Sed eu massa non enim lobortis elementum. Cras tempus finibus nunc, sit amet pretium nisl mattis quis. Cras id tristique leo. Phasellus massa purus, rhoncus et diam.")
+        self.MyPlotFrame4 = MyPlotFrame(self, title="Categorias con menos ventas en 2014", xData=result1, yData=result2 , desc="Lor libero, nec coeo. Phasellus massa purus, rhoncus et diam.")
         self.MyPlotFrame4.grid(row=1,column=1,padx=10,pady=(10,0), sticky="nsew")
 
         db.disconnect()
